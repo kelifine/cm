@@ -17,32 +17,30 @@ class StorageCommand(PluginCommand):
         ::
 
           Usage:
-                storage [--storage=SERVICE] put FILENAME SOURCEDIR [DESTDIR]
-                storage [--storage=SERVICE] get FILENAME DESTDIR
-                storage [--storage=SERVICE] delete FILENAME
-                storage [--storage=SERVICE] info FILENAME
-                storage [--storage=SERVICE] search FILENAME
-                storage [--storage=SERVICE] create dir DIRNAME [DESTDIR]
-                storage [--storage=SERVICE] list dir [DIRNAME]
-                storage [--storage=SERVICE] delete dir DIRNAME
+                storage [--storage=SERVICE] put SOURCE DESTINATION [--recursive]
+                storage [--storage=SERVICE] get SOURCE DESTINATION [--recursive]
+                storage [--storage=SERVICE] search DIRECTORY FILENAME [--recursive]
+                storage [--storage=SERVICE] create dir DIRECTORY
+                storage [--storage=SERVICE] list SOURCE [--recursive]
+                storage [--storage=SERVICE] delete SOURCE
 
 
           This command creates, deletes, and returns information on directories and files in cloud storage services.
 
           Arguments:
-              FILE      a file name
-              DESTDIR   destination directory for uploads and downloads
-              SOURCEDIR source directory for syncing directories
-              DIRNAME name of new folder
+              FILENAME      a file name
+              DESTINATION   destination directory
+              SOURCE        source file or directory
+              DIRECTORY     name of directory
 
 
           Example:
             set storage=box
-            storage put FILENAME SOURCEDIR DESTDIR
+            storage put SOURCE DESTINATION --recursive
 
             is the same as 
 
-            storage  --storage=box put FILENAME SOURCEDIR DESTDIR
+            storage  --storage=box put SOURCE DESTINATION --recursive
 
 
         """
@@ -66,30 +64,17 @@ class StorageCommand(PluginCommand):
             Console.error("storage service not defined")
 
 
-        if arguments.get==True:
-            m.get(service, arguments.FILENAME, arguments.DESTDIR)
+        if arguments['get']==True:
+            m.get(service, arguments.SOURCE, arguments.DESTINATION, arguments['--recursive'])
         elif arguments.put==True:
-            if arguments.DESTDIR is not None:
-                m.put(service, arguments.FILENAME, arguments.SOURCEDIR, arguments.DESTDIR)
-            else:
-                m.put(service, arguments.FILENAME, arguments.SOURCEDIR)
-        elif arguments.delete==True:
-            m.delete(service, arguments.FILENAME)
-        elif arguments.info==True:
-            m.info(service, arguments.FILENAME)
+            m.put(service, arguments.SOURCE, arguments.DESTINATION, arguments['--recursive'])
         elif arguments.search==True:
-            m.search(service, arguments.FILENAME)
+            m.search(service, arguments.DIRECTORY, arguments.FILENAME, arguments['--recursive'])
         elif arguments.create==True and arguments.dir == True:
-            if arguments.DESTDIR is not None:
-                m.create_dir(service, arguments.DIRNAME, arguments.DESTDIR)
-            else:
-                m.create_dir(service, arguments.DIRNAME)
-        elif arguments.list==True and arguments.dir==True:
-            if arguments.DIRNAME is not None:
-                m.list_dir(service, arguments.DIRNAME)
-            else:
-                m.list_dir(service)
-        elif arguments.delete==True and arguments.dir==True:
-            m.delete_dir(service, arguments.DIRNAME)
+            m.create_dir(service, arguments.DIRECTORY)
+        elif arguments.list==True:
+            m.list(service, arguments.SOURCE, arguments['--recursive'])
+        elif arguments.delete==True:
+            m.delete(service, arguments.SOURCE)
         else:
             print("Command not recognized.")
