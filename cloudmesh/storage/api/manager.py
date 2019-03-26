@@ -18,43 +18,33 @@ class Manager(object):
             provider = cloudmesh.storage.provider.box.Provider.Provider()
         return provider
 
-    def delete(self, service, filename):
-        print("delete", service, filename)
+    def get(self, service, source, destination, recursive):
+        print("get", service, source, destination, recursive)
         provider = self._provider(service)
-        provider.delete(filename)
+        provider.get(source, destination, recursive)
 
-    def get(self, service, filename, destdir):
-        print("get", service, filename, destdir)
+    def put(self, service, source, destination, recursive):
+        print("put", service, source, destination, recursive)
         provider = self._provider(service)
-        provider.get(filename, destdir)
+        provider.put(source, destination, recursive)
 
-    def put(self, service, filename, sourcedir, destdir=None):
-        print("put", service, filename, sourcedir, destdir)
+    def search(self, service, directory, filename, recursive):
+        print("search", service, directory, filename, recursive)
         provider = self._provider(service)
-        provider.put(filename, sourcedir, destdir)
+        provider.search(directory, filename, recursive)
 
-    def info(self, service, filename):
-        print("info", service, filename)
+    def create_dir(self, service, dirname):
+        print("createdir", service, dirname)
         provider = self._provider(service)
-        provider.info(filename)
+        provider.create_dir(dirname)
 
-    def search(self, service, filename):
-        print("search", service, filename)
+    def list(self, service, source=None, recursive=False):
+        print("list", service, source, recursive)
         provider = self._provider(service)
-        provider.search(filename)
+        provider.list(source, recursive)
 
-    def create_dir(self, service, dirname, destdir=None):
-        print("createdir", service, dirname, destdir)
+    def delete(self, service, source):
+        print("deletedir", service, source)
         provider = self._provider(service)
-        provider.createdir(dirname, destdir)
-
-    def list_dir(self, service, dirname=None):
-        print("listdir", service, dirname)
-        provider = self._provider(service)
-        provider.listdir(dirname)
-
-    def delete_dir(self, service, dirname):
-        print("deletedir", service, dirname)
-        provider = self._provider(service)
-        provider.deletedir(dirname)
+        provider.delete(source)
 
